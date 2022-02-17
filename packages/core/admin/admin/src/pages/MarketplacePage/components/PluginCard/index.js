@@ -13,90 +13,86 @@ import Duplicate from '@strapi/icons/Duplicate';
 import Check from '@strapi/icons/Check';
 
 const PluginCard = ({ plugin, installedPlugins }) => {
-  const { id, attributes } = plugin;
+  const { attributes } = plugin;
   const { formatMessage } = useIntl();
 
   return (
-    <Box
+    <Flex
       paddingLeft={6}
       paddingRight={6}
       paddingTop={4}
       paddingBottom={4}
       hasRadius
       background="neutral0"
-      key={id}
       shadow="tableShadow"
+      justifyContent="space-between"
+      direction="column"
+      alignItems="stretch"
       style={{ height: '100%' }}
     >
-      <Flex
-        justifyContent="space-between"
-        direction="column"
-        alignItems="flex-end"
-        style={{ height: '100%' }}
-      >
-        <div style={{ width: '100%' }}>
-          <Box
-            as="img"
-            src={attributes.logo.url}
-            alt={`${attributes.name} logo`}
-            hasRadius
+      <div>
+        <Box
+          as="img"
+          src={attributes.logo.url}
+          alt={`${attributes.name} logo`}
+          hasRadius
+          style={{
+            width: '64px',
+            height: '64px',
+            objectFit: 'contain',
+          }}
+        />
+        <Stack paddingTop={5} size={3}>
+          <Typography as="p" variant="delta">
+            {attributes.name}
+          </Typography>
+          <Typography
+            as="p"
+            variant="omega"
+            textColor="neutral600"
             style={{
-              width: '64px',
-              height: '64px',
-              objectFit: 'contain',
+              display: ' -webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2,
+              overflow: 'hidden',
             }}
-          />
-          <Box paddingTop={5}>
-            <Typography variant="delta">{attributes.name}</Typography>
-          </Box>
-          <Box paddingTop={3}>
-            <Typography
-              variant="omega"
-              textColor="neutral600"
-              style={{
-                display: ' -webkit-box',
-                WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 2,
-                overflow: 'hidden',
-              }}
-            >
-              {attributes.description}
+          >
+            {attributes.description}
+          </Typography>
+        </Stack>
+      </div>
+      <Stack horizontal size={2} paddingTop={3} style={{ alignSelf: 'flex-end' }}>
+        <LinkButton
+          size="S"
+          href={`https://market.strapi.io/plugins/${attributes.slug}`}
+          endIcon={<ExternalLink />}
+          variant="tertiary"
+        >
+          {formatMessage({
+            id: 'admin.pages.MarketPlacePage.plugin.info',
+            defaultMessage: 'Learn more',
+          })}
+        </LinkButton>
+        {installedPlugins.includes(attributes.name.toLowerCase()) ? (
+          <Box paddingLeft={4}>
+            <Icon as={Check} marginRight={2} width={12} height={12} color="success600" />
+            <Typography variant="omega" textColor="success600" fontWeight="bold">
+              {formatMessage({
+                id: 'admin.pages.MarketPlacePage.plugin.installed',
+                defaultMessage: 'Installed',
+              })}
             </Typography>
           </Box>
-        </div>
-        <Stack horizontal size={2} paddingTop={3}>
-          <LinkButton
-            size="S"
-            href={`https://market.strapi.io/plugins/${attributes.slug}`}
-            endIcon={<ExternalLink />}
-            variant="tertiary"
-          >
+        ) : (
+          <Button size="S" endIcon={<Duplicate />} variant="secondary">
             {formatMessage({
-              id: 'admin.pages.MarketPlacePage.plugin.info',
-              defaultMessage: 'Learn more',
+              id: 'admin.pages.MarketPlacePage.plugin.copy',
+              defaultMessage: 'Copy install command',
             })}
-          </LinkButton>
-          {installedPlugins.includes(attributes.name.toLowerCase()) ? (
-            <Box paddingLeft={4}>
-              <Icon as={Check} marginRight={2} width={12} height={12} color="success600" />
-              <Typography variant="omega" textColor="success600" fontWeight="bold">
-                {formatMessage({
-                  id: 'admin.pages.MarketPlacePage.plugin.installed',
-                  defaultMessage: 'Installed',
-                })}
-              </Typography>
-            </Box>
-          ) : (
-            <Button size="S" endIcon={<Duplicate />} variant="secondary">
-              {formatMessage({
-                id: 'admin.pages.MarketPlacePage.plugin.copy',
-                defaultMessage: 'Copy install command',
-              })}
-            </Button>
-          )}
-        </Stack>
-      </Flex>
-    </Box>
+          </Button>
+        )}
+      </Stack>
+    </Flex>
   );
 };
 
