@@ -7,10 +7,12 @@ import { Typography } from '@strapi/design-system/Typography';
 import { Button } from '@strapi/design-system/Button';
 import { LinkButton } from '@strapi/design-system/LinkButton';
 import { Flex } from '@strapi/design-system/Flex';
+import { Icon } from '@strapi/design-system/Icon';
 import ExternalLink from '@strapi/icons/ExternalLink';
 import Duplicate from '@strapi/icons/Duplicate';
+import Check from '@strapi/icons/Check';
 
-const PluginCard = ({ plugin }) => {
+const PluginCard = ({ plugin, installedPlugins }) => {
   const { id, attributes } = plugin;
   const { formatMessage } = useIntl();
 
@@ -74,12 +76,24 @@ const PluginCard = ({ plugin }) => {
               defaultMessage: 'Learn more',
             })}
           </LinkButton>
-          <Button size="S" endIcon={<Duplicate />} variant="secondary">
-            {formatMessage({
-              id: 'admin.pages.MarketPlacePage.plugin.copy',
-              defaultMessage: 'Copy install command',
-            })}
-          </Button>
+          {installedPlugins.includes(attributes.name.toLowerCase()) ? (
+            <Box paddingLeft={4}>
+              <Icon as={Check} marginRight={2} width={12} height={12} color="success600" />
+              <Typography variant="omega" textColor="success600" fontWeight="bold">
+                {formatMessage({
+                  id: 'admin.pages.MarketPlacePage.plugin.installed',
+                  defaultMessage: 'Installed',
+                })}
+              </Typography>
+            </Box>
+          ) : (
+            <Button size="S" endIcon={<Duplicate />} variant="secondary">
+              {formatMessage({
+                id: 'admin.pages.MarketPlacePage.plugin.copy',
+                defaultMessage: 'Copy install command',
+              })}
+            </Button>
+          )}
         </Stack>
       </Flex>
     </Box>
@@ -102,6 +116,7 @@ PluginCard.propTypes = {
       strapiCompatibility: PropTypes.oneOf(['v3', 'v4']).isRequired,
     }).isRequired,
   }).isRequired,
+  installedPlugins: PropTypes.array.isRequired,
 };
 
 export default PluginCard;
